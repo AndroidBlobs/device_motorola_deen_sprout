@@ -1,0 +1,8 @@
+#Blaine add seosors-hal input group for AP senosr,it will override android.hardware.sensors@1.0-service.rc
+
+service sensors-hal-1-0 /vendor/bin/hw/android.hardware.sensors@1.0-service
+    class hal
+    user system
+    group input system
+    capabilities SYS_NICE
+
