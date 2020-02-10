@@ -17,7 +17,7 @@ PRODUCT_MODEL := motorola one
 PRODUCT_GMS_CLIENTID_BASE := android-motorola
 TARGET_VENDOR := motorola
 TARGET_VENDOR_PRODUCT_NAME := deen_sprout
-PRODUCT_BUILD_PROP_OVERRIDES += PRIVATE_BUILD_DESC=" 9 PPKS29.68-16-34-13 850e6 release-keys"
+PRODUCT_BUILD_PROP_OVERRIDES += PRIVATE_BUILD_DESC=" 9 PPKS29.68-16-33-16 4f6f3 release-keys"
 
 # Set BUILD_FINGERPRINT variable to be picked up by both system and vendor build.prop
-BUILD_FINGERPRINT := 9/PPKS29.68-16-34-13/850e6:user/release-keys
+BUILD_FINGERPRINT := 9/PPKS29.68-16-33-16/4f6f3:user/release-keys
