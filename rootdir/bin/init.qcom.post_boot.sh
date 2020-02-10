@@ -1931,6 +1931,9 @@ case "$target" in
 
                 # Set Memory parameters
                 configure_memory_parameters
+
+                # Set Read ahead values
+                configure_read_ahead_kb_values
             ;;
         esac
         case "$soc_id" in

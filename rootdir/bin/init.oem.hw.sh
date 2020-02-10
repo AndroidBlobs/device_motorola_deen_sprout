@@ -234,107 +234,6 @@ populate_utags()
 	done
 }
 
-get_map_data_by_name()
-{
-	local __result=$1
-	local attr=$2
-	shift 2
-	local IFS=','
-	eval $__result=""
-	for arg in ${@}; do
-		[ "${arg%:*}" == "$attr" ] || [ "0x${arg%:*}" == "$attr" ] || continue
-		debug "attr_data='${arg#*:}'"
-		eval $__result="${arg#*:}"
-		break
-	done
-}
-
-get_hwid_by_radio_name()
-{
-	local __result=$1
-	local sku_name=$2
-
-	sku_list=$(cat $hw_mp/radio/.auto/ascii)
-	map_list=${sku_list#*map=}
-	notice "map_list is $map_list"
-
-	local IFS=','
-	eval $__result=""
-	for arg in $map_list; do
-		[ "${arg#*:}" == "$sku_name" ] || continue
-		debug "attr_id='${arg%:*}'"
-		eval  $__result="0x${arg%:*}"
-		break
-	done
-}
-
-populate_utags_auto_value()
-{
-	local radio_value
-	local auto_rule
-	local utag_path
-	local utag_name
-	local utag_value
-	local map_value
-	local hwid
-	local keyname
-	local value
-
-	radio_value=$(getprop 'ro.boot.radio')
-	if [ "${radio_value:0:2}" == "0x" ] || [ "$radio_value" -gt 0 ]; then
-		hwid=$radio_value
-	else
-		get_hwid_by_radio_name hwid $radio_value
-	fi
-
-	notice "hwid num is:$hwid"
-
-	for hwtag in $(find $hw_mp -name '.auto'); do
-		debug "path $hwtag has '.auto' in its name"
-		autorule=$(cat $hwtag/ascii)
-		utag_path=${hwtag%/*}
-		utag_name=${utag_path##*/}
-		utag_value=$(cat $utag_path/ascii)
-
-		debug "$utag_name='$utag_value' autorule='$autorule'"
-		if [ "$utag_value" != "(null)" ]; then
-			debug "utag value $utag_value is not null, ignore"
-			continue
-		fi
-
-		local IFS=';'
-		for arg in $autorule; do
-			keyname=${arg%=*}
-			value=${arg#*=}
-
-			debug "arg='${arg}'   keyname='${arg%=*}' value='${arg#*=}'"
-			case $keyname in
-				key)
-					[ "$value" == "hwid" ] || break
-					;;
-				index)
-					[ "$value" == "2" ] || break
-					;;
-				map)
-					get_map_data_by_name map_value "$hwid" $value
-					notice "auto update utag $utag_name $map_value"
-					update_utag $utag_name $map_value
-					break
-					;;
-				default)
-					notice "auto update utag $utag_name $value"
-					update_utag $utag_name $value
-					break
-					;;
-				*)
-					debug "other rule '$args' "
-					break
-					;;
-			esac
-		done
-	done
-}
-
 set_ro_hw_properties_upgrade()
 {
 	local utag_path
@@ -658,8 +557,6 @@ if [ "$xml_version" != "$version_fs" ]; then
 	# update procfs version
 	[ -d $hw_mp/$ver_utag ] && $(echo "$xml_version" > $hw_mp/$ver_utag/ascii)
 fi
-
-[ "$xml_version" == "$version_fs" ] || populate_utags_auto_value
 
 set_ro_vendor_incremental
 

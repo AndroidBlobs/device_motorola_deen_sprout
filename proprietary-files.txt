@@ -122,6 +122,9 @@ vendor/lib64/soundfx/libqcomvoiceprocessing.so
 
 # Bluetooth
 vendor/bin/hw/android.hardware.bluetooth@1.0-service-qti
+vendor/etc/diag_mdlog/Bluetooth-WLAN-coex_V01.cfg
+vendor/etc/diag_mdlog/Bluetooth_split_audio_V1.cfg
+vendor/etc/diag_mdlog/Bluetooth_V1.cfg
 vendor/etc/init/android.hardware.bluetooth@1.0-service-qti.rc
 vendor/lib/com.qualcomm.qti.bluetooth_audio@1.0.so
 vendor/lib/hw/android.hardware.bluetooth.audio@2.0-impl.so
@@ -1704,6 +1707,8 @@ vendor/bin/bl_notify
 vendor/bin/capsense_reset
 vendor/bin/charge_only_mode
 vendor/bin/diag_mdlog
+vendor/bin/diag_mdlog-getlogs
+vendor/bin/diag_mdlog-wrap
 vendor/bin/ftmdaemon
 vendor/bin/ftmipcd
 vendor/bin/hbtp_daemon
@@ -1768,6 +1773,23 @@ vendor/bin/xtwifi-inet-agent
 vendor/etc/ap_gain.bin
 vendor/etc/ap_gain_mmul.bin
 vendor/etc/bt_stack_level6.conf
+vendor/etc/diag_mdlog/ADSP-sensor.cfg
+vendor/etc/diag_mdlog/Connection_Issues_V13.cfg
+vendor/etc/diag_mdlog/Connection_Issues_V13_with_RF_and_tuner_log.cfg
+vendor/etc/diag_mdlog/default.cfg
+vendor/etc/diag_mdlog/default.opts
+vendor/etc/diag_mdlog/DIAG_WLAN_Modem_AS.cfg
+vendor/etc/diag_mdlog/DIAG_WLAN_Modem_no_AS.cfg
+vendor/etc/diag_mdlog/FIT_V23_1.cfg
+vendor/etc/diag_mdlog/FIT_V23_2_volte_full_ip.cfg
+vendor/etc/diag_mdlog/FIT_V23_3_audio.cfg
+vendor/etc/diag_mdlog/GNSS_v9.cfg
+vendor/etc/diag_mdlog/MM_audio_playback_capture_v2.0.cfg
+vendor/etc/diag_mdlog/QC_default.cfg
+vendor/etc/diag_mdlog/Sensors_for_670_6150_8150_and_later.cfg
+vendor/etc/diag_mdlog/Vzw_Connection_Issues_V3.cfg
+vendor/etc/diag_mdlog/WLAN_V1.cfg
+vendor/etc/diag_mdlog/Wlan_V2.cfg
 vendor/etc/hostapd/hostapd.accept
 vendor/etc/hostapd/hostapd.deny
 vendor/etc/hostapd/hostapd_default.conf

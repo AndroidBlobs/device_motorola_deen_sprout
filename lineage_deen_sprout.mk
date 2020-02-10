@@ -17,7 +17,7 @@ PRODUCT_MODEL := motorola one
 PRODUCT_GMS_CLIENTID_BASE := android-motorola
 TARGET_VENDOR := motorola
 TARGET_VENDOR_PRODUCT_NAME := deen_sprout
-PRODUCT_BUILD_PROP_OVERRIDES += PRIVATE_BUILD_DESC=" 10 QPK30.51 bffa2 release-keys"
+PRODUCT_BUILD_PROP_OVERRIDES += PRIVATE_BUILD_DESC=" 10 QPK30.54-8 6787 release-keys"
 
 # Set BUILD_FINGERPRINT variable to be picked up by both system and vendor build.prop
-BUILD_FINGERPRINT := motorola/deen_retail/deen_sprout:10/QPK30.51/bffa2:user/release-keys
+BUILD_FINGERPRINT := motorola/deen_retail/deen_sprout:10/QPK30.54-8/6787:user/release-keys
