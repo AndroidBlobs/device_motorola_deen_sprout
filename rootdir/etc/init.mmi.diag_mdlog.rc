@@ -3,7 +3,7 @@ on post-fs-data
     mkdir /data/vendor/diag_mdlog 0770 system log
     mkdir /data/vendor/diag_mdlog/logs 0750 log log
 
-on property:persist.vendor.sys.diag_mdlog.on=1
+on property:persist.vendor.sys.diag_mdlog.on=1  && property:vendor.boot_completed=1
     start vendor.diag_mdlog
 
 on property:persist.vendor.sys.diag_mdlog.on=0

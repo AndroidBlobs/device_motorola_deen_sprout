@@ -5,7 +5,7 @@
         <boolean name="default_carrierconfig_loaded" value="true" />
         <boolean name="show_ims_registration_status_bool" value="true" />
     </carrier_config>
-    <carrier_config mcc="001" customerid="verizon">
+    <carrier_config customerid="verizon" mcc="001">
         <boolean name="carrier_volte_provisioning_required_bool" value="true" />
         <boolean name="carrier_allow_turnoff_ims_bool" value="false" />
         <boolean name="carrier_volte_tty_supported_bool" value="true" />
@@ -23,11 +23,11 @@
         <boolean name="use_rcs_presence_bool" value="true" />
         <boolean name="show_iccid_in_sim_status_bool" value="true" />
     </carrier_config>
-    <carrier_config mcc="001" customerid="sprint">
+    <carrier_config customerid="sprint" mcc="001">
         <boolean name="carrier_volte_available_bool" value="false" />
         <boolean name="carrier_vt_available_bool" value="false" />
     </carrier_config>
-    <carrier_config mcc="001" carrierid="att">
+    <carrier_config carrierid="att" mcc="001">
         <boolean name="editable_wfc_mode_bool" value="false" />
         <int name="carrier_default_wfc_ims_mode_int" value="1" />
     </carrier_config>
@@ -38,6 +38,7 @@
         <boolean name="carrier_volte_tty_supported_bool" value="false" />
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true" />
         <boolean name="vilte_data_is_metered_bool" value="false" />
+        <boolean name="carrier_supports_ss_over_ut_bool" value="true" />
     </carrier_config>
     <carrier_config mcc="202">
         <int name="maxImageHeight" value="1944" />
@@ -48,6 +49,10 @@
     </carrier_config>
     <carrier_config mcc="202" mnc="01">
         <int name="smsToMmsTextThreshold" value="-1" />
+    </carrier_config>
+    <carrier_config mcc="204">
+        <boolean name="always_show_emergency_alert_onoff_bool" value="true" />
+        <boolean name="carrier_force_disable_etws_cmas_test_bool" value="true" />
     </carrier_config>
     <carrier_config mcc="206">
         <int name="maxImageHeight" value="1944" />
@@ -102,7 +107,7 @@
         <int name="smsToMmsTextThreshold" value="6" />
     </carrier_config>
     <carrier_config mcc="220" mnc="04">
-        <int name="smsToMmsTextThreshold" value="2" />
+        <int name="smsToMmsTextThreshold" value="-1" />
     </carrier_config>
     <carrier_config mcc="222">
         <int name="maxImageHeight" value="1944" />
@@ -171,12 +176,6 @@
         <int name="maxImageHeight" value="1944" />
         <int name="maxImageWidth" value="2592" />
         <int name="recipientLimit" value="20" />
-    </carrier_config>
-    <carrier_config customerid="vf" mcc="234" mnc="15">
-        <boolean name="moto_hide_non_user_apn_edit_delete_bool" value="true" />
-    </carrier_config>
-    <carrier_config customerid="3uk" mcc="234" mnc="20">
-        <boolean name="moto_hide_non_user_apn_edit_delete_bool" value="true" />
     </carrier_config>
     <carrier_config mcc="238">
         <int name="maxImageHeight" value="1944" />
@@ -256,6 +255,7 @@
         <int name="maxImageWidth" value="2592" />
         <int name="recipientLimit" value="20" />
         <int name="smsToMmsTextThreshold" value="6" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
     </carrier_config>
     <carrier_config mcc="260" mnc="02">
         <int name="smsToMmsTextThreshold" value="-1" />
@@ -267,6 +267,12 @@
         <int name="smsToMmsTextThreshold" value="6" />
     </carrier_config>
     <carrier_config mcc="262" mnc="01">
+        <int name="smsToMmsTextThreshold" value="-1" />
+    </carrier_config>
+    <carrier_config mcc="262" mnc="03">
+        <int name="smsToMmsTextThreshold" value="-1" />
+    </carrier_config>
+    <carrier_config mcc="262" mnc="07">
         <int name="smsToMmsTextThreshold" value="-1" />
     </carrier_config>
     <carrier_config mcc="268">
@@ -384,11 +390,39 @@
         <int name="smsToMmsTextThreshold" value="6" />
     </carrier_config>
     <carrier_config mcc="297" mnc="02">
-        <int name="smsToMmsTextThreshold" value="2" />
+        <int name="smsToMmsTextThreshold" value="-1" />
     </carrier_config>
     <carrier_config mcc="302">
         <boolean name="moto_hide_non_user_apn_edit_delete_bool" value="true" />
         <boolean name="hide_ims_apn_bool" value="true" />
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+    </carrier_config>
+    <carrier_config mcc="310">
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="hide_lte_plus_data_icon_bool" value="true" />
+    </carrier_config>
+    <carrier_config mcc="311">
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+        <boolean name="hide_lte_plus_data_icon_bool" value="true" />
+    </carrier_config>
+    <carrier_config mcc="312">
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
+    </carrier_config>
+    <carrier_config mcc="313">
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
+    </carrier_config>
+    <carrier_config mcc="314">
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
+    </carrier_config>
+    <carrier_config mcc="315">
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
+    </carrier_config>
+    <carrier_config mcc="316">
+        <boolean name="display_in_call_notification_wifi_icon_bool" value="true" />
     </carrier_config>
     <carrier_config mcc="330">
         <boolean name="moto_enable_service_dialing_number" value="true" />
@@ -757,7 +791,7 @@
         <int name="recipientLimit" value="20" />
         <int name="smsToMmsTextThreshold" value="6" />
         <boolean name="support_pause_ims_video_calls_bool" value="false" />
-        <boolean name="ascii_7_bit_support_for_long_message" value="true" />
+        <boolean name="ascii_7_bit_support_for_long_message_bool" value="true" />
         <string-array name="carrier_metered_apn_types_strings" num="3">
             <item value="default" />
             <item value="dun" />
@@ -776,6 +810,10 @@
         <int name="maxImageWidth" value="2592" />
         <int name="recipientLimit" value="20" />
         <int name="smsToMmsTextThreshold" value="6" />
+        <string-array name="carrier_additional_cbs_channels_strings" num="2">
+            <item value="911:emergency=true,type=other" />
+            <item value="919:emergency=true,type=other" />
+        </string-array>
     </carrier_config>
     <carrier_config mcc="467">
         <int name="maxImageHeight" value="1944" />
@@ -1346,6 +1384,7 @@
     <carrier_config mcc="716">
         <int name="maxImageHeight" value="1944" />
         <int name="maxImageWidth" value="2592" />
+        <boolean name="smsUsesSimpleCharactersOnly" value="true" />
         <boolean name="moto_enable_service_dialing_number" value="true" />
     </carrier_config>
     <carrier_config mcc="722">
@@ -1373,6 +1412,7 @@
         <int name="maxSubjectLength" value="80" />
         <int name="recipientLimit" value="20" />
         <int name="smsToMmsTextThreshold" value="6" />
+        <boolean name="smsUsesSimpleCharactersOnly" value="true" />
         <boolean name="moto_enable_service_dialing_number" value="true" />
     </carrier_config>
     <carrier_config mcc="732">
@@ -1401,6 +1441,7 @@
         <int name="recipientLimit" value="20" />
         <int name="smsToMmsTextThreshold" value="6" />
         <boolean name="moto_enable_service_dialing_number" value="true" />
+        <boolean name="show_4g_for_lte_data_icon_bool" value="false" />
     </carrier_config>
     <carrier_config mcc="738">
         <int name="maxImageHeight" value="1944" />
@@ -1447,5 +1488,8 @@
     </carrier_config>
     <carrier_config customerid="3uk" mcc="234" mnc="20">
         <boolean name="moto_hide_non_user_apn_edit_delete_bool" value="true" />
+    </carrier_config>
+    <carrier_config device="deen">
+        <boolean name="sim_lock_is_valid_sim_bool" value="true" />
     </carrier_config>
 </carrier_config_list>

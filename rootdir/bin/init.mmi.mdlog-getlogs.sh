@@ -3,6 +3,7 @@
 getlogs_opts="/data/vendor/bug2go/getlogs.opts"
 mdlog_user_opts="/data/vendor/diag_mdlog/user3.opts"
 qdb_file="/firmware/image/qdsp6m.qdb"
+qdb_file_alt="/vendor/firmware_mnt/image/qdsp6m.qdb"
 
 arg_output="/data/vendor/bug2go/modem"
 log_file=$arg_output/"getlogs.log"
@@ -27,5 +28,10 @@ fi
 # copy qdsp6m.qdb
 if [ -f $qdb_file ]; then
     cp $qdb_file $arg_output/
+else
+   # copy qdsp6m.qdb from alternate folder
+   if [ -f $qdb_file_alt ]; then
+       cp $qdb_file_alt $arg_output/
+   fi
 fi
 

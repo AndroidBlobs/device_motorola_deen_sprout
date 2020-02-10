@@ -23,7 +23,11 @@ annotate()
 
 case $1 in
     build*)
-        annotate "Build product" "getprop ro.build.product"
-        annotate "Build number" "getprop ro.vendor.build.thumbprint"
+        annotate "Boot mode" "getprop ro.boot.mode"
+        annotate "Console" "getprop ro.boot.console"
+        annotate "Secure hardware" "getprop ro.boot.secure_hardware"
+        annotate "Hab cid" "getprop ro.boot.hab.cid"
+        annotate "VB state" "getprop ro.boot.verifiedbootstate"
+        annotate "Verity mode" "getprop ro.boot.veritymode"
         ;;
 esac

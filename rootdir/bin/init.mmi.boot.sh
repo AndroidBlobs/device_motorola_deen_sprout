@@ -136,28 +136,16 @@ if [ $? -eq 0 ]; then
 fi
 unset model product
 
-# For non-user builds only check if Normal min free offset file is there and use
-# those values to override the default setting
-if [ "`getprop ro.build.type`" != "user" ]
-then
-	if [ -f /data/vendor/minFreeOff.txt ]
-	then
-		if [ -e /proc/sys/vm/min_free_normal_offset ]
-		then
-			echo -e `cat /data/vendor/minFreeOff.txt` > /proc/sys/vm/min_free_normal_offset
-		fi
-	fi
-fi
-
-# ro.vendor.bootreason, which be used to indicate kpanic/wdt boot status.
+# set ro.vendor.bootreason, which be used to indicate kpanic/wdt boot status.
 # When ro.boot.last_powerup_reason is set, it denotes this is a 2nd reboot
 # after kpanic/wdt, we set ro.bootreason as coldboot to copy logs.
-# Otherwise,we would set ro.bootreason the same as ro.boot.bootreason.
-bootreason=$(getprop ro.boot.bootreason)
+# Otherwise, we would set ro.bootreason the same as ro.boot.bootreason.
+# ro.boot.bootreason is restricted as of android p, so get it another way:
+bootreason_kvp=$(cat /proc/bootinfo | grep "Last boot reason")
 last_power_up=$(getprop ro.boot.last_powerup_reason)
 if [ ! -z "$last_power_up" ]
 then
 	setprop ro.vendor.bootreason "coldboot"
 else
-	setprop ro.vendor.bootreason $bootreason
+	setprop ro.vendor.bootreason ${bootreason_kvp##* }
 fi

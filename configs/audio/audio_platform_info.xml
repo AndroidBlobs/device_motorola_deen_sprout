@@ -67,6 +67,7 @@
 	<usecase name="USECASE_VOWLAN_CALL" type="in" id="16"/>
 	<usecase name="USECASE_VOWLAN_CALL" type="out" id="16"/>
 	<usecase name="USECASE_AUDIO_SPKR_CALIB_TX" type="in" id="26" />
+	<usecase name="USECASE_INCALL_MUSIC_UPLINK" type="out" id="14" />
 </pcm_ids>
 
 <config_params>

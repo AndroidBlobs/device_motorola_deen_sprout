@@ -65,7 +65,7 @@ on fs
 
 on property:ro.persistent_properties.ready=true && property:vold.decrypt=trigger_load_persist_props
     setprop vendor.usb.config  ${sys.usb.config}
-    setprop persist.vendor.mot.usb.config  ${persist.sys.usb.config}
+    setprop persist.vendor.mot.usb.config  ${persist.sys.usb.config:-" "}
     setprop persist.vendor.usb.config " "
 
 on property:sys.boot_completed=*
@@ -104,12 +104,12 @@ on property:ro.bootmode=bp-tools
 
 on property:vendor.tcmd.ctrl_adb=1
     stop vendor.mmi-usb-sh
-    setprop usb.mmi-usb-sh.action vendor.tcmd.ctrl_adb
+    setprop vendor.usb.mmi-usb-sh.action vendor.tcmd.ctrl_adb
     start vendor.mmi-usb-sh
 
 on property:vendor.tcmd.ctrl_adb=0
     stop vendor.mmi-usb-sh
-    setprop usb.mmi-usb-sh.action vendor.tcmd.ctrl_adb
+    setprop vendor.usb.mmi-usb-sh.action vendor.tcmd.ctrl_adb
     start vendor.mmi-usb-sh
 
 # USB compositions

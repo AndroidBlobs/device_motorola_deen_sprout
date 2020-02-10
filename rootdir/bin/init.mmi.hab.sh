@@ -1,6 +1,5 @@
 #!/system/vendor/bin/sh
 # High assurance boot image verification service
-# Checks system image, oem image, or both depending on "which_image"
 
 if [[ $1 == "complete" ]]; then
     error=`/vendor/bin/getprop vendor.hab.error`
@@ -14,8 +13,6 @@ if [[ $1 == "complete" ]]; then
     fi
     exit 0
 fi
-
-which_image=$1
 
 product=`/vendor/bin/getprop ro.boot.hab.product`
 cid=`/vendor/bin/getprop ro.boot.hab.cid`
@@ -57,23 +54,14 @@ value_from_key()
 
 verify_system()
 {
-    system_file="/system/etc/system_sign_info"
-
-    value_from_key "HAB_PRODUCT" "$system_file"
-    system_product=$value
-    value_from_key "HAB_CID" "$system_file"
-    system_cid=$value
-    value_from_key "HAB_SECURITY_VERSION" "$system_file"
-    system_csv=$value
+    system_cid=`/vendor/bin/getprop ro.mot.hab.cid`
+    system_csv=`/vendor/bin/getprop ro.mot.hab.csv`
+    system_product=`/vendor/bin/getprop ro.mot.hab.product`
 
     echo "verifying system:"
-    echo "  product:$system_product"
     echo "  cid:$system_cid"
     echo "  csv:$system_csv"
-
-    if [ "x$product" != "x$system_product" ]; then
-        do_hab_error "SYSTEM_PRODUCT_CHECK"
-    fi
+    echo "  product:$system_product"
 
     if [ "x$cid" != "x$system_cid" ]; then
         do_hab_error "SYSTEM_CID_CHECK"
@@ -81,6 +69,10 @@ verify_system()
 
     if [ "x$csv" != "x$system_csv" ]; then
         do_hab_error "SYSTEM_CSV_CHECK"
+    fi
+
+    if [ "x$product" != "x$system_product" ]; then
+        do_hab_error "SYSTEM_PRODUCT_CHECK"
     fi
 
     setprop vendor.hab.system.verified true
@@ -190,19 +182,15 @@ echo "  product:$product"
 echo "  cid:$cid"
 echo "  csv:$csv"
 
-if [[ $which_image != "other" ]]; then
-    verify_system
-fi
+verify_system
 
-if [[ $which_image != "system" ]]; then
-    oem_mount=`/vendor/bin/cat /vendor/etc/fstab* | /vendor/bin/toybox_vendor grep "/oem"`
-    if [ ! -z "$oem_mount" ]; then
-        verify_oem
-    fi
-    vendor_mount=`/vendor/bin/mount | /vendor/bin/toybox_vendor grep "/vendor "`
-    if [ ! -z "$vendor_mount" ]; then
-        verify_vendor
-    fi
+oem_mount=`/vendor/bin/cat /proc/mounts | /vendor/bin/toybox_vendor grep "/oem "`
+if [ ! -z "$oem_mount" ]; then
+    verify_oem
+fi
+vendor_mount=`/vendor/bin/cat /proc/mounts | /vendor/bin/toybox_vendor grep "/vendor "`
+if [ ! -z "$vendor_mount" ]; then
+    verify_vendor
 fi
 
 exit 0

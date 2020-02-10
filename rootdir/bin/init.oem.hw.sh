@@ -21,7 +21,6 @@ hw_mp=/proc/hw
 config_mp=/proc/config
 reboot_utag=$config_mp/.reboot
 touch_status_prop=vendor.hw.touch.status
-oem_panel_script=/vendor/bin/init.oem.panel.sh
 hw_cfg_file=hw_config.xml
 vhw_file=/$BASEDIR/etc/vhw.xml
 bp_file=/system/build.prop
@@ -129,7 +128,7 @@ procfs_wait_for_device()
 	while [ ! -f $hw_mp/reload ] || [ ! -f $config_mp/reload ]; do
 		notice "waiting for devices"
 		sleep 1;
-		if [ "$device_timeout_count" -eq "60" ];then
+		if [ "$device_timeout_count" -eq "10" ];then
 			notice "waiting for devices timeout"
 			eval $__result=""
 			return
@@ -281,8 +280,8 @@ populate_utags_auto_value()
 	local keyname
 	local value
 
-	radio_value=$(getprop 'ro.vendor.hw.radio')
-	if [ "${radio_value:0:2}" == "0x" ]; then
+	radio_value=$(getprop 'ro.boot.radio')
+	if [ "${radio_value:0:2}" == "0x" ] || [ "$radio_value" -gt 0 ]; then
 		hwid=$radio_value
 	else
 		get_hwid_by_radio_name hwid $radio_value
@@ -364,7 +363,7 @@ set_ro_hw_properties()
 	for hwtag in $(find $hw_mp -name '.system'); do
 		debug "path $hwtag has '.system' in its name"
 		prop_prefix=$(cat $hwtag/ascii)
-		verify=${prefix%.}
+		verify=${prop_prefix%.}
 		# esure property ends with '.'
 		if [ "$prop_prefix" == "$verify" ]; then
 			prop_prefix="$prop_prefix."
@@ -375,7 +374,7 @@ set_ro_hw_properties()
 		utag_name=${utag_path##*/}
 		utag_value=$(cat $utag_path/ascii)
 		setprop $prop_prefix$utag_name "$utag_value"
-		notice "ro.vendor.hw.$utag_name='$utag_value'"
+		notice "$prop_prefix$utag_name='$utag_value'"
 	done
 }
 
@@ -410,11 +409,15 @@ smart_value()
 	eval $__result='$value'
 }
 
-whitespace_off()
+url_style_off()
 {
 	local __arg=$1
 	local value=$2
-	value=$(echo $value | sed 's/%20/ /g')
+	if [[ $value == *%* ]]; then
+		value=$(echo $value | sed 's/%20/ /g')
+		value=$(echo $value | sed 's/%28/\(/g')
+		value=$(echo $value | sed 's/%29/\)/g')
+	fi
 	eval $__arg='$value'
 }
 
@@ -426,14 +429,13 @@ match()
 	local fs_value
 	local mvalue
 	local matched
-	whitespace_off mapping $1
+	url_style_off mapping $1
 	debug "match mapping='$mapping'"
 	# put '\"' around $mapping to ensure XML
 	# parser takes it as a single argument
 	for mline in $(exec_parser \"$mapping\"); do
 		get_tag_data mtag mvalue $mline
-		whitespace_off mvalue $mvalue
-		[ "$matched" == "false" ] && continue
+		url_style_off mvalue $mvalue
 		# obtain value based on data source: utag, property or file
 		smart_value $mtag fs_value
 		if [ "$fs_value" == "$mvalue" ]; then
@@ -442,6 +444,7 @@ match()
 			matched="false";
 		fi
 		debug "cmp utag='$mtag' values '$mvalue' & '$fs_value' is \"$matched\""
+		[ "$matched" == "false" ] && break
 	done
 	[ "$matched" == "true" ] && return 0
 	return 1
@@ -520,16 +523,16 @@ process_mappings()
 		get_attr_data_by_name pexport "export" $pline
 		get_attr_data_by_name pdefault "default" $pline
 		get_attr_data_by_name pappend "append" $pline
-		[ "$pname" ] && whitespace_off pname $pname && debug "name='$pname'"
-		[ "$pexport" ] && whitespace_off pexport $pexport && debug "export='$pexport'"
-		[ "$pdefault" ] && whitespace_off pdefault $pdefault && debug "default='$pdefault'"
-		[ "$pappend" ] && whitespace_off pappend $pappend && debug "append='$pappend'"
+		[ "$pname" ] && url_style_off pname $pname && debug "name='$pname'"
+		[ "$pexport" ] && url_style_off pexport $pexport && debug "export='$pexport'"
+		[ "$pdefault" ] && url_style_off pdefault $pdefault && debug "default='$pdefault'"
+		[ "$pappend" ] && url_style_off pappend $pappend && debug "append='$pappend'"
 		# add 'subsection' to permanent parameters
 		add_device_params $subsection
 		# call itself here to handle nonamed subsection, like quirks
 		[ -z "$pname" ] && [ -z "$pexport" ] && [ -z "$pdefault" ] && [ -z "$pappend" ] && process_mappings && continue
 		find_match matched_val
-		[ "$matched_val" ] && whitespace_off matched_val $matched_val
+		[ "$matched_val" ] && url_style_off matched_val $matched_val
 		# append_match handles OEM overrides, thus has to be called even with empty value
 		[ "$pappend" ] && append_match $pappend "$matched_val"
 		if [ "$matched_val" ]; then
@@ -547,15 +550,6 @@ process_mappings()
 	done
 }
 
-get_panel_supplier()
-{
-	panel_supplier=""
-	panel_supplier=$(cat /sys/devices/virtual/graphics/fb0/panel_supplier 2> /dev/null)
-	debug "panel supplier vendor is: [$panel_supplier]"
-	[ -z "$panel_supplier" ] && return 1
-	return 0
-}
-
 # Main starts here
 IFS=$'\n'
 
@@ -569,6 +563,11 @@ if [ ! -z "$dead_touch" ]; then
 	notice "property [$touch_status_prop] set to [dead]"
 	set_reboot_counter 1
 	return 0
+fi
+
+if [ -f /vendor/lib/modules/utags.ko ]; then
+	notice "loading utag driver"
+	insmod /vendor/lib/modules/utags.ko
 fi
 
 notice "checking integrity"
@@ -658,11 +657,6 @@ if [ "$xml_version" != "$version_fs" ]; then
 	[ ! -d $hw_mp/$ver_utag ] && $(echo "$ver_utag" > $hw_mp/all/new)
 	# update procfs version
 	[ -d $hw_mp/$ver_utag ] && $(echo "$xml_version" > $hw_mp/$ver_utag/ascii)
-fi
-
-if [ -f $oem_panel_script ]; then
-	get_panel_supplier
-	[ $? -eq 0 ] && $oem_panel_script -s $panel_supplier
 fi
 
 [ "$xml_version" == "$version_fs" ] || populate_utags_auto_value
